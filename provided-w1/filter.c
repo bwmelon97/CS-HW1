@@ -118,17 +118,21 @@ void filter_negative(struct image *img, void *noarg) {
   for (long i = 0; i <= img->size_y; i++) {
     for (long j = 0; j <= img->size_x; j++) {
 
+      /* Bug !!
+       * 
+       * Fix: Declare struct pixel 'neg' directly, 
+       *      instead of using function 'get_pixel()'.
+       */
       struct pixel current = image_data[i][j];
-      struct pixel *neg = get_pixel();
+      struct pixel neg;
 
-      /* The negative is just the maximum minus the current value */
-      neg->red = 255 - current.red;
-      neg->green = 255 - current.green;
-      neg->blue = 255 - current.blue;
-      neg->alpha = current.alpha;
+      neg.red = 255 - current.red;
+      neg.green = 255 - current.green;
+      neg.blue = 255 - current.blue;
+      neg.alpha = current.alpha;
 
       /* Write it back */
-      image_data[i][j] = *neg;
+      image_data[i][j] = neg;
     }
   }
 }
@@ -149,6 +153,7 @@ void filter_transparency(struct image *img, void *transparency) {
   }
 }
 
+// 버그 있음
 /* This filter is used to detect edges by computing the gradient for each
  * pixel and comparing it to the threshold argument. When the gradient exceeds
  * the threshold, the pixel is replaced by black, otherwise white.
