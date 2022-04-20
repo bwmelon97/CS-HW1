@@ -12,7 +12,7 @@ Because the variable `px` is free when the function `get_pixel()` returned, the 
 
 ## Affected Lines in the original program
 
-In range `filter.c:127` to `filter.c:135`
+In range `filter.c:122` to `filter.c:131`
 
 ## Expected vs Observed
 

@@ -12,7 +12,7 @@ The `char` array variable `arg` is assigned its length as `ARG_SIZE`, which is d
 // filter.c:6
 #define ARG_SIZE 255
 
-// filter.c:248
+// filter.c:202 (original line)
 char arg[ARG_SIZE];
 ```
 
@@ -20,7 +20,7 @@ When program `filter` is executed with 4 arguments, variable `arg` is assigned v
 
 ## Affected Lines in the original program
 
-In `filter.c:274`
+In `filter.c:225`
 
 ## Expected vs Observed
 
