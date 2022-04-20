@@ -19,8 +19,8 @@ void filter_grayscale(struct image *img, void *weight_arr) {
    *
    * FIX: Initialize both variables to 0.
    */
-  for (unsigned short i; i < img->size_y; i++) {
-    for (unsigned short j; j < img->size_x; j++) {
+  for (unsigned short i = 0; i < img->size_y; i++) {
+    for (unsigned short j = 0; j < img->size_x; j++) {
       double luminosity = 0;
 
       luminosity += weights[0] * image_data[i][j].red;
@@ -49,7 +49,10 @@ void filter_blur(struct image *img, void *r) {
   struct pixel(*image_data)[img->size_x] =
       (struct pixel(*)[img->size_x])img->px;
   int radius = *((int *)r);
-  if (radius < 0) {
+  if (radius < 0 
+    || radius > img->size_x 
+    || radius > img->size_y 
+  ) {
     radius = 0;
   }
 
@@ -66,15 +69,47 @@ void filter_blur(struct image *img, void *r) {
 
       unsigned red = 0, green = 0, blue = 0, alpha = 0;
       /* We iterate over all pixels in the square */
-      for (long y_offset = -radius; y_offset <= radius; y_offset++) {
-        for (long x_offset = -radius; x_offset <= radius; x_offset++) {
+      /**
+       * Bug !!
+       * Iteration errors.
+       * 
+       * Pixels of the square which fall outside the image do not count 
+       * towards the average.
+       */
+
+      /**
+       * Pixels over the images.
+       * Positive value means 'index + radius' is over the bound,
+       * 0 value means 'index + radius' is in the bound.
+       */
+      long top_over     = i < radius ? radius - i : 0;
+      long bottom_over  = img->size_y < (i + radius) 
+                          ? (i + radius) - img->size_y 
+                          : 0;
+      long left_over    = j < radius ? radius - j : 0;
+      long right_over   = img->size_x < (j + radius) 
+                          ? (radius + j) - img->size_x
+                          : 0;
+
+      /**
+       * Iteration Bound of Pixel Tiles
+       * if there are pixels over the image file, bound is set as 
+       * 0 or size of image.
+       */
+      long top_bound    = top_over == 0     ? i - radius  : 0;
+      long bottom_bound = bottom_over == 0  ? i + radius  : img->size_y;
+      long left_bound   = left_over == 0    ? j - radius  : 0;
+      long right_bound  = right_over == 0   ? j + radius  : img->size_x;
+
+      for (long y = top_bound; y <= bottom_bound; y++) {
+        for (long x = left_bound; x <= right_bound; x++) {
 
           /* BUG!
            * This bug isn't graded.
            *
            * FIX: Limit reads only to valid memory
            */
-          struct pixel current = image_data[i + y_offset][j + x_offset];
+          struct pixel current = image_data[y][x];
 
           red += current.red;
           blue += current.blue;
@@ -83,7 +118,13 @@ void filter_blur(struct image *img, void *r) {
         }
       }
 
-      int num_pixels = (2 * radius + 1) * (2 * radius + 1);
+      /**
+       * Pixels out of bound should be excluded in counts.
+       */
+      int x_pixels = (2 * radius + 1) - (left_over + right_over);
+      int y_pixels = (2 * radius + 1) - (top_over + bottom_over);
+      int num_pixels = x_pixels * y_pixels;
+
       /* Calculate the average */
       red /= num_pixels;
       green /= num_pixels;
@@ -118,17 +159,21 @@ void filter_negative(struct image *img, void *noarg) {
   for (long i = 0; i <= img->size_y; i++) {
     for (long j = 0; j <= img->size_x; j++) {
 
+      /* Bug !!
+       * 
+       * Fix: Declare struct pixel 'neg' directly, 
+       *      instead of using function 'get_pixel()'.
+       */
       struct pixel current = image_data[i][j];
-      struct pixel *neg = get_pixel();
+      struct pixel neg;
 
-      /* The negative is just the maximum minus the current value */
-      neg->red = 255 - current.red;
-      neg->green = 255 - current.green;
-      neg->blue = 255 - current.blue;
-      neg->alpha = current.alpha;
+      neg.red = 255 - current.red;
+      neg.green = 255 - current.green;
+      neg.blue = 255 - current.blue;
+      neg.alpha = current.alpha;
 
       /* Write it back */
-      image_data[i][j] = *neg;
+      image_data[i][j] = neg;
     }
   }
 }
@@ -149,6 +194,7 @@ void filter_transparency(struct image *img, void *transparency) {
   }
 }
 
+// 버그 있음
 /* This filter is used to detect edges by computing the gradient for each
  * pixel and comparing it to the threshold argument. When the gradient exceeds
  * the threshold, the pixel is replaced by black, otherwise white.
@@ -221,8 +267,11 @@ int __attribute__((weak)) main(int argc, char *argv[]) {
   strncpy(command, argv[3], ARG_SIZE);
 
   /* If the filter takes an argument, copy it */
+  /* Bug !!
+   * String vulnerability
+   */
   if (argv[4]) {
-    strcpy(arg, argv[4]);
+    strncpy(arg, argv[4], ARG_SIZE);
   }
 
   /* Error when loading a png image */
