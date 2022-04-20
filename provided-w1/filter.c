@@ -226,8 +226,11 @@ int __attribute__((weak)) main(int argc, char *argv[]) {
   strncpy(command, argv[3], ARG_SIZE);
 
   /* If the filter takes an argument, copy it */
+  /* Bug !!
+   * String vulnerability
+   */
   if (argv[4]) {
-    strcpy(arg, argv[4]);
+    strncpy(arg, argv[4], ARG_SIZE);
   }
 
   /* Error when loading a png image */
