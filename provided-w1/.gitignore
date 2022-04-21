@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Test imgs & texts
+output.png
+poc.png
+
+over_500.txt
