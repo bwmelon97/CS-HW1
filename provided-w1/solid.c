@@ -120,26 +120,24 @@ int main(int argc, char *argv[]) {
   free(img->px);
   free(img);
 
-  /* We want to inform user how big the new image is.
-   * "stat -c %s filename" prints the size of the file
-   *
-   * To prevent buffer overflows we use strncat.
-   */
-  char command[512] = {0};
-
-  printf("Size: ");
-
+  /* We want to inform user how big the new image is. */
   /**
-   * Command Injection
+   * Bug 5: Command Injection
    * 
+   * Get info of file's size by methods related with file (fopen, fseek, ftell, fclose),
+   * instead of using system method with command.
    */
-  /* printf will write to the screen when it encounters a new line
-   * By calling fflush we force the program to output "Size " right away
+  FILE *png_file = fopen(output_name, "rb");
+  /**
+   * We don't have to check if there is a png_file, becasue if it doesn't exist,
+   * the error will occur when the method 'store_png()' executed. 
    */
-  fflush(stdout);
-  strcat(command, "stat -c %s ");
-  strncat(command, output_name, OUTPUT_NAME_SIZE);
-  system(command);
+  fseek(png_file, 0L, SEEK_END);
+  long size = ftell(png_file);
+  fseek(png_file, 0L, SEEK_SET);
+  
+  printf("Size: %d\n", size);
+  fclose(png_file);
 
   return 0;
 
