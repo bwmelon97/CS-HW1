@@ -29,8 +29,17 @@ int main(int argc, char *argv[]) {
   }
 
   /* Assign names to arguments for better abstraction */
+  /**
+   * Bug 4: Buffer Overflow Error
+   * 
+   * Raise an error if the argv[1] is longer than (OUTPUT_NAME_SIZE - 1)
+   * Use strncpy instead of strcpy.
+   */
+  if (strlen(argv[1]) > (OUTPUT_NAME_SIZE - 1)) { // last 
+    goto error_arg_size;
+  }
   char output_name[OUTPUT_NAME_SIZE];
-  strcpy(output_name, argv[1]);
+  strncpy(output_name, argv[1], OUTPUT_NAME_SIZE);
   const char *height_arg = argv[2];
   const char *width_arg = argv[3];
   const char *hex_color_arg = argv[4];
@@ -40,6 +49,10 @@ int main(int argc, char *argv[]) {
     goto error;
   }
 
+  /**
+   * Arithmetic overflow / underflow ? maybe
+   * 
+   */
   unsigned long height = strtol(height_arg, &end_ptr, 10);
 
   /* If the user provides negative height or the height is 0 and the end_ptr
@@ -116,6 +129,10 @@ int main(int argc, char *argv[]) {
 
   printf("Size: ");
 
+  /**
+   * Command Injection
+   * 
+   */
   /* printf will write to the screen when it encounters a new line
    * By calling fflush we force the program to output "Size " right away
    */
@@ -133,6 +150,12 @@ int main(int argc, char *argv[]) {
 error:
   free(palette);
   printf("Usage: %s output_name height width hex_color\n", argv[0]);
+  return 1;
+
+error_arg_size:
+  free(palette);
+  printf("Usage: %s output_name height width hex_color\n", argv[0]);
+  printf("(Hint: length of output_name should be smaller than 500.)\n");
   return 1;
 
 error_px:
