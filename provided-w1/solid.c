@@ -33,9 +33,10 @@ int main(int argc, char *argv[]) {
    * Bug 4: Buffer Overflow Error
    * 
    * Raise an error if the argv[1] is longer than (OUTPUT_NAME_SIZE - 1)
+   * Becasue, last element of output_name should be filled with null terminator.
    * Use strncpy instead of strcpy.
    */
-  if (strlen(argv[1]) > (OUTPUT_NAME_SIZE - 1)) { // last 
+  if (strlen(argv[1]) >= OUTPUT_NAME_SIZE) {
     goto error_arg_size;
   }
   char output_name[OUTPUT_NAME_SIZE];
