@@ -31,7 +31,14 @@ int main(int argc, char *argv[]) {
    */
 
   char *end_ptr;
-  long hex_color = strtol(argv[7], end_ptr, 16);
+  /**
+   * Bug 6: Type error 
+   * 
+   * strtol() method의 두번 째 parameter의 타입은 포인터의 주소값에 해당하는 
+   * char** type이어야 한다.
+   * 따라서 char* type인 end_ptr 대신 &end_ptr를 parameter로 넣어주었다.
+   */
+  long hex_color = strtol(argv[7], &end_ptr, 16);
   if (*end_ptr || strlen(argv[7]) != 6 || hex_color < 0) {
     hex_color = 0;
   }
@@ -61,6 +68,12 @@ int main(int argc, char *argv[]) {
   unsigned i = 0;
   unsigned j = 0;
   while (i < height) {
+    /**
+     * Bug 7: Iteration Error
+     * 
+     * j should be initialized in the outer while loop (loop for verticle)
+     */
+    j = 0;
     while (j < width) {
       // Check if the pixel is in the rectangle
 
@@ -77,9 +90,15 @@ int main(int argc, char *argv[]) {
         image_data[i][j].blue = (hex_color & 0x0000ff);
         image_data[i][j].alpha = 0xff;
       }
-      i++;
+      /**
+       * Bug 8: Iteration Error
+       * 
+       * i should not be increased in the inner while loop (loop for horizontal)
+       * Instead i should increase in the outer while loop.
+       */
       j++;
     }
+    i++;
   }
 
   store_png(output, img, NULL, 0);
