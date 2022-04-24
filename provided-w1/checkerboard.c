@@ -115,8 +115,22 @@ int main(int argc, char *argv[]) {
         int square_top_left_y = i * square_width;
 
         /* This iterates over a square and fills it with the correct color */
-        for (int x = 0; x < square_width; x++) {
-          for (int y = 0; y < square_width; y++) {
+        /**
+         * Bug 12: Heap Overflow
+         * 
+         * In the case that square_width is bigger than width or height of image,
+         * and the case that width or height is not devided with square_width,
+         * `image_data[square_top_left_y + y][square_top_left_x + x]` accesses the
+         * area that is not allocated for itself. (which means overflow in heap)
+         * 
+         * Error Message: 
+         * ```
+         * malloc(): corrupted top size
+         * Aborted (core dumped)
+         * ```
+         */
+        for (int x = 0; square_top_left_x + x < width && x < square_width; x++) {
+          for (int y = 0; square_top_left_y + y < height && y < square_width; y++) {
             image_data[square_top_left_y + y][square_top_left_x + x].red =
                 palette[color].red;
             image_data[square_top_left_y + y][square_top_left_x + x].green =
