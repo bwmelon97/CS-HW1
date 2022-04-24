@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   unsigned long n_pixels = height * width;
 
   /**
-   * Bug11:  Arithmetic overflow/underflow
+   * Bug11: [4] Arithmetic overflow/underflow
    * 
    * color1, color2 should be an positive value.
    */
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
   }
 
   /**
-   * Bug 13: Temporal memory safety violation
+   * Bug 13: [6] Temporal memory safety violation
    * 
    * When px of img couldn't be allocated in the memory, double free occurs in 
    * the original program.
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 
         /* This iterates over a square and fills it with the correct color */
         /**
-         * Bug 12: Heap Overflow
+         * Bug 12: [5] Heap Overflow
          * 
          * In the case that square_width is bigger than width or height of image,
          * and the case that width or height is not devided with square_width,
