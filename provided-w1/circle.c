@@ -24,10 +24,17 @@ int main(int argc, char *argv[]) {
   /* Invalid radius will just be interpretted as 0 */
   int radius = atoi(argv[5]);
 
+  /**
+   * Bug 9: Heap Overflow
+   * 
+   * The length of argv[] is 7. Therefore, trying to access 8 index of argv, 
+   * 'argv[7]' will occur heap Overflow.
+   * We can solve this bug by modify rgv[7] -> argv[6], which is the value of hex_color.
+   */
   /* Invalid color will be interpretted as black */
   char *end_ptr;
-  long hex_color = strtol(argv[7], &end_ptr, 16);
-  if (*end_ptr || strlen(argv[7]) != 6 || hex_color < 0) {
+  long hex_color = strtol(argv[6], &end_ptr, 16);
+  if (*end_ptr || strlen(argv[6]) != 6 || hex_color < 0) {
     hex_color = 0;
   }
 
