@@ -91,9 +91,19 @@ int main(int argc, char *argv[]) {
     goto error_mem;
   }
 
+  /**
+   * Bug 13: Temporal memory safety violation
+   * 
+   * When px of img couldn't be allocated in the memory, double free occurs in 
+   * the original program.
+   * 
+   * ```
+   * free(): double free detected in tcache 2
+   * Aborted (core dumped)
+   * ```
+   */
   img->px = malloc(sizeof(struct pixel) * n_pixels);
   if (!img->px) {
-    free(img);
     goto error_img;
   }
 
