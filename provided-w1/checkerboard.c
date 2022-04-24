@@ -46,15 +46,20 @@ int main(int argc, char *argv[]) {
 
   unsigned long n_pixels = height * width;
 
+  /**
+   * Bug11:  Arithmetic overflow/underflow
+   * 
+   * color1, color2 should be an positive value.
+   */
   long color1 = strtol(hex_color_arg1, &end_ptr, 16);
 
-  if (*end_ptr) {
+  if (*end_ptr || color1 < 0) {
     goto error;
   }
 
   long color2 = strtol(hex_color_arg2, &end_ptr, 16);
 
-  if (*end_ptr) {
+  if (*end_ptr || color2 < 0) {
     goto error;
   }
 
