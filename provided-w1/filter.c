@@ -49,10 +49,7 @@ void filter_blur(struct image *img, void *r) {
   struct pixel(*image_data)[img->size_x] =
       (struct pixel(*)[img->size_x])img->px;
   int radius = *((int *)r);
-  if (radius < 0 
-    || radius > img->size_x 
-    || radius > img->size_y 
-  ) {
+  if (radius < 0 || radius > img->size_x || radius > img->size_y) {
     radius = 0;
   }
 
@@ -71,8 +68,8 @@ void filter_blur(struct image *img, void *r) {
       /* We iterate over all pixels in the square */
       /**
        * Bug 3: Iteration errors.
-       * 
-       * Pixels of the square which fall outside the image do not count 
+       *
+       * Pixels of the square which fall outside the image do not count
        * towards the average.
        */
 
@@ -81,24 +78,22 @@ void filter_blur(struct image *img, void *r) {
        * Positive value means 'index + radius' is over the bound,
        * 0 value means 'index + radius' is in the bound.
        */
-      long top_over     = i < radius ? radius - i : 0;
-      long bottom_over  = img->size_y < (i + radius) 
-                          ? (i + radius) - img->size_y 
-                          : 0;
-      long left_over    = j < radius ? radius - j : 0;
-      long right_over   = img->size_x < (j + radius) 
-                          ? (radius + j) - img->size_x
-                          : 0;
+      long top_over = i < radius ? radius - i : 0;
+      long bottom_over =
+          img->size_y < (i + radius) ? (i + radius) - img->size_y : 0;
+      long left_over = j < radius ? radius - j : 0;
+      long right_over =
+          img->size_x < (j + radius) ? (radius + j) - img->size_x : 0;
 
       /**
        * Iteration Bound of Pixel Tiles
-       * if there are pixels over the image file, bound is set as 
+       * if there are pixels over the image file, bound is set as
        * 0 or size of image.
        */
-      long top_bound    = top_over == 0     ? i - radius  : 0;
-      long bottom_bound = bottom_over == 0  ? i + radius  : img->size_y;
-      long left_bound   = left_over == 0    ? j - radius  : 0;
-      long right_bound  = right_over == 0   ? j + radius  : img->size_x;
+      long top_bound = top_over == 0 ? i - radius : 0;
+      long bottom_bound = bottom_over == 0 ? i + radius : img->size_y;
+      long left_bound = left_over == 0 ? j - radius : 0;
+      long right_bound = right_over == 0 ? j + radius : img->size_x;
 
       for (long y = top_bound; y <= bottom_bound; y++) {
         for (long x = left_bound; x <= right_bound; x++) {
@@ -159,8 +154,8 @@ void filter_negative(struct image *img, void *noarg) {
     for (long j = 0; j <= img->size_x; j++) {
 
       /* Bug 1: Local Persisting Pointer
-       * 
-       * Fix: Declare struct pixel 'neg' directly, 
+       *
+       * Fix: Declare struct pixel 'neg' directly,
        *      instead of using function 'get_pixel()'.
        */
       struct pixel current = image_data[i][j];
@@ -275,7 +270,7 @@ int __attribute__((weak)) main(int argc, char *argv[]) {
   /* If the filter takes an argument, copy it */
   if (argv[4]) {
     strncpy(arg, argv[4], ARG_SIZE);
-      argv[4][ARG_SIZE - 1] = '\0';
+    argv[4][ARG_SIZE - 1] = '\0';
   }
 
   /* Error when loading a png image */

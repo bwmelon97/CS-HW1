@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   /* Assign names to arguments for better abstraction */
   /**
    * Bug 4: Buffer Overflow Error
-   * 
+   *
    * Raise an error if the argv[1] is longer than (OUTPUT_NAME_SIZE - 1)
    * Becasue, last element of output_name should be filled with null terminator.
    * Use strncpy instead of strcpy.
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
   /**
    * Arithmetic overflow / underflow ? maybe
-   * 
+   *
    */
   unsigned long height = strtol(height_arg, &end_ptr, 10);
 
@@ -124,19 +124,19 @@ int main(int argc, char *argv[]) {
   /* We want to inform user how big the new image is. */
   /**
    * Bug 5: Command Injection
-   * 
-   * Get info of file's size by methods related with file (fopen, fseek, ftell, fclose),
-   * instead of using system method with command.
+   *
+   * Get info of file's size by methods related with file (fopen, fseek, ftell,
+   * fclose), instead of using system method with command.
    */
   FILE *png_file = fopen(output_name, "rb");
   /**
    * We don't have to check if there is a png_file, becasue if it doesn't exist,
-   * the error will occur when the method 'store_png()' executed. 
+   * the error will occur when the method 'store_png()' executed.
    */
   fseek(png_file, 0L, SEEK_END);
   long size = ftell(png_file);
   fseek(png_file, 0L, SEEK_SET);
-  
+
   printf("Size: %d\n", size);
   fclose(png_file);
 

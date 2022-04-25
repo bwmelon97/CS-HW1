@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 
   /**
    * Bug11: [4] Arithmetic overflow/underflow
-   * 
+   *
    * color1, color2 should be an positive value.
    */
   long color1 = strtol(hex_color_arg1, &end_ptr, 16);
@@ -93,10 +93,10 @@ int main(int argc, char *argv[]) {
 
   /**
    * Bug 13: [6] Temporal memory safety violation
-   * 
-   * When px of img couldn't be allocated in the memory, double free occurs in 
+   *
+   * When px of img couldn't be allocated in the memory, double free occurs in
    * the original program.
-   * 
+   *
    * ```
    * free(): double free detected in tcache 2
    * Aborted (core dumped)
@@ -127,20 +127,23 @@ int main(int argc, char *argv[]) {
         /* This iterates over a square and fills it with the correct color */
         /**
          * Bug 12: [5] Heap Overflow
-         * 
-         * In the case that square_width is bigger than width or height of image,
-         * and the case that width or height is not devided with square_width,
-         * `image_data[square_top_left_y + y][square_top_left_x + x]` accesses the
-         * area that is not allocated for itself. (which means overflow in heap)
-         * 
-         * Error Message: 
+         *
+         * In the case that square_width is bigger than width or height of
+         * image, and the case that width or height is not devided with
+         * square_width, `image_data[square_top_left_y + y][square_top_left_x +
+         * x]` accesses the area that is not allocated for itself. (which means
+         * overflow in heap)
+         *
+         * Error Message:
          * ```
          * malloc(): corrupted top size
          * Aborted (core dumped)
          * ```
          */
-        for (int x = 0; square_top_left_x + x < width && x < square_width; x++) {
-          for (int y = 0; square_top_left_y + y < height && y < square_width; y++) {
+        for (int x = 0; square_top_left_x + x < width && x < square_width;
+             x++) {
+          for (int y = 0; square_top_left_y + y < height && y < square_width;
+               y++) {
             image_data[square_top_left_y + y][square_top_left_x + x].red =
                 palette[color].red;
             image_data[square_top_left_y + y][square_top_left_x + x].green =

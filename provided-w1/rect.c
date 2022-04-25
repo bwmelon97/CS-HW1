@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
 
   char *end_ptr;
   /**
-   * Bug 6: Type error 
-   * 
-   * strtol() method의 두번 째 parameter의 타입은 포인터의 주소값에 해당하는 
+   * Bug 6: Type error
+   *
+   * strtol() method의 두번 째 parameter의 타입은 포인터의 주소값에 해당하는
    * char** type이어야 한다.
    * 따라서 char* type인 end_ptr 대신 &end_ptr를 parameter로 넣어주었다.
    */
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
   while (i < height) {
     /**
      * Bug 7: Iteration Error
-     * 
+     *
      * j should be initialized in the outer while loop (loop for verticle)
      */
     j = 0;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
       }
       /**
        * Bug 8: Iteration Error
-       * 
+       *
        * i should not be increased in the inner while loop (loop for horizontal)
        * Instead i should increase in the outer while loop.
        */

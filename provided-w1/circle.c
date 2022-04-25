@@ -26,10 +26,11 @@ int main(int argc, char *argv[]) {
 
   /**
    * Bug 9: Heap Overflow
-   * 
-   * The length of argv[] is 7. Therefore, trying to access 8 index of argv, 
+   *
+   * The length of argv[] is 7. Therefore, trying to access 8 index of argv,
    * 'argv[7]' will occur heap Overflow.
-   * We can solve this bug by modify rgv[7] -> argv[6], which is the value of hex_color.
+   * We can solve this bug by modify rgv[7] -> argv[6], which is the value of
+   * hex_color.
    */
   /* Invalid color will be interpretted as black */
   char *end_ptr;
@@ -58,8 +59,9 @@ int main(int argc, char *argv[]) {
    */
   /**
    * Bug 10: Wrong Operator
-   * 
-   * In this code, assignment operator '=' is need, istead of Equality operator '=='.
+   *
+   * In this code, assignment operator '=' is need, istead of Equality operator
+   * '=='.
    */
   for (int x = center_x - radius; x <= center_x + radius; x++) {
     int y = round(center_y +
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]) {
     image_data[y][x].alpha = 0xff;
 
     y = round(center_y -
-               sqrt(radius * radius - (x - center_x) * (x - center_x)));
+              sqrt(radius * radius - (x - center_x) * (x - center_x)));
 
     image_data[y][x].red = (hex_color & 0xff0000) >> 16;
     image_data[y][x].green = (hex_color & 0x00ff00) >> 8;
@@ -94,7 +96,7 @@ int main(int argc, char *argv[]) {
     image_data[y][x].alpha = 0xff;
 
     x = round(center_x -
-               sqrt(radius * radius - (y - center_y) * (y - center_y)));
+              sqrt(radius * radius - (y - center_y) * (y - center_y)));
 
     image_data[y][x].red = (hex_color & 0xff0000) >> 16;
     image_data[y][x].green = (hex_color & 0x00ff00) >> 8;
