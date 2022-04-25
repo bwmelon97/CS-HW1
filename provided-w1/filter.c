@@ -70,8 +70,7 @@ void filter_blur(struct image *img, void *r) {
       unsigned red = 0, green = 0, blue = 0, alpha = 0;
       /* We iterate over all pixels in the square */
       /**
-       * Bug !!
-       * Iteration errors.
+       * Bug 3: Iteration errors.
        * 
        * Pixels of the square which fall outside the image do not count 
        * towards the average.
