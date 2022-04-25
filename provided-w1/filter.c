@@ -261,17 +261,22 @@ int __attribute__((weak)) main(int argc, char *argv[]) {
   fil.filter = NULL;
   fil.arg = NULL;
 
+  /**
+   * Bug 2: String vulnerability
+   */
   /* Copy arguments for easier reference */
   strncpy(input, argv[1], ARG_SIZE);
   strncpy(output, argv[2], ARG_SIZE);
   strncpy(command, argv[3], ARG_SIZE);
 
+  argv[1][ARG_SIZE - 1] = '\0';
+  argv[2][ARG_SIZE - 1] = '\0';
+  argv[3][ARG_SIZE - 1] = '\0';
+
   /* If the filter takes an argument, copy it */
-  /* Bug !!
-   * String vulnerability
-   */
   if (argv[4]) {
     strncpy(arg, argv[4], ARG_SIZE);
+      argv[4][ARG_SIZE - 1] = '\0';
   }
 
   /* Error when loading a png image */
