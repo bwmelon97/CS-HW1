@@ -159,7 +159,7 @@ void filter_negative(struct image *img, void *noarg) {
   for (long i = 0; i <= img->size_y; i++) {
     for (long j = 0; j <= img->size_x; j++) {
 
-      /* Bug !!
+      /* Bug 1: Local Persisting Pointer
        * 
        * Fix: Declare struct pixel 'neg' directly, 
        *      instead of using function 'get_pixel()'.
