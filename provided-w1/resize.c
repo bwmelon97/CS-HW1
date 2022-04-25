@@ -45,7 +45,14 @@ int main(int argc, char *argv[]) {
   new_img->size_x = new_width;
   new_img->size_y = new_height;
 
-  new_img->px = malloc(n_pixels + sizeof(struct pixel));
+  /**
+   * Bug 14: [10] Wrong Operator
+   *
+   * `new_img->px` should be allocated size of (number of pixels) * (size of
+   * struct pixel). Modify `n_pixels + sizeof(struct pixel)` to `n_pixels *
+   * sizeof(struct pixel)`
+   */
+  new_img->px = malloc(n_pixels * sizeof(struct pixel));
 
   if (!new_img->px) {
     goto error_memory_img;

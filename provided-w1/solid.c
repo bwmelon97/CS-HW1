@@ -29,8 +29,18 @@ int main(int argc, char *argv[]) {
   }
 
   /* Assign names to arguments for better abstraction */
+  /**
+   * Bug 4: Buffer Overflow Error
+   *
+   * Raise an error if the argv[1] is longer than (OUTPUT_NAME_SIZE - 1)
+   * Becasue, last element of output_name should be filled with null terminator.
+   * Use strncpy instead of strcpy.
+   */
+  if (strlen(argv[1]) >= OUTPUT_NAME_SIZE) {
+    goto error_arg_size;
+  }
   char output_name[OUTPUT_NAME_SIZE];
-  strcpy(output_name, argv[1]);
+  strncpy(output_name, argv[1], OUTPUT_NAME_SIZE);
   const char *height_arg = argv[2];
   const char *width_arg = argv[3];
   const char *hex_color_arg = argv[4];
@@ -40,6 +50,10 @@ int main(int argc, char *argv[]) {
     goto error;
   }
 
+  /**
+   * Arithmetic overflow / underflow ? maybe
+   *
+   */
   unsigned long height = strtol(height_arg, &end_ptr, 10);
 
   /* If the user provides negative height or the height is 0 and the end_ptr
@@ -107,22 +121,24 @@ int main(int argc, char *argv[]) {
   free(img->px);
   free(img);
 
-  /* We want to inform user how big the new image is.
-   * "stat -c %s filename" prints the size of the file
+  /* We want to inform user how big the new image is. */
+  /**
+   * Bug 5: Command Injection
    *
-   * To prevent buffer overflows we use strncat.
+   * Get info of file's size by methods related with file (fopen, fseek, ftell,
+   * fclose), instead of using system method with command.
    */
-  char command[512] = {0};
-
-  printf("Size: ");
-
-  /* printf will write to the screen when it encounters a new line
-   * By calling fflush we force the program to output "Size " right away
+  FILE *png_file = fopen(output_name, "rb");
+  /**
+   * We don't have to check if there is a png_file, becasue if it doesn't exist,
+   * the error will occur when the method 'store_png()' executed.
    */
-  fflush(stdout);
-  strcat(command, "stat -c %s ");
-  strncat(command, output_name, OUTPUT_NAME_SIZE);
-  system(command);
+  fseek(png_file, 0L, SEEK_END);
+  long size = ftell(png_file);
+  fseek(png_file, 0L, SEEK_SET);
+
+  printf("Size: %d\n", size);
+  fclose(png_file);
 
   return 0;
 
@@ -133,6 +149,12 @@ int main(int argc, char *argv[]) {
 error:
   free(palette);
   printf("Usage: %s output_name height width hex_color\n", argv[0]);
+  return 1;
+
+error_arg_size:
+  free(palette);
+  printf("Usage: %s output_name height width hex_color\n", argv[0]);
+  printf("(Hint: length of output_name should be smaller than 500.)\n");
   return 1;
 
 error_px:

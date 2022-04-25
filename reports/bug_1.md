@@ -14,6 +14,11 @@ Because the variable `px` is free when the function `get_pixel()` returned, the 
 
 In range `filter.c:122` to `filter.c:131`
 
+```c
+// line 122
+struct pixel *neg = get_pixel();
+```
+
 ## Expected vs Observed
 
 We expect that the pointer `neg` points a new pixel struct, but it is observed as null pointer. So, we also observed a segmentation fault, when the pointer `neg` tries to access property of struct `pixel`. (Ex. `neg->red`)

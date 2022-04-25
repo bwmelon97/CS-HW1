@@ -189,15 +189,11 @@ END_TEST
 /* Verify that the black image is inverted properly to a white image.
  * Then invert the result again and verify that you get a black image back
  * The alpha channel needs to be intact in both cases */
-START_TEST(negative_functionality) {
-  /* TODO: Implement */
-}
+START_TEST(negative_functionality) { /* TODO: Implement */ }
 END_TEST
 
 /* Check if the filter doesn't crash when we pass a 0x0 image */
-START_TEST(negative_zero_size) {
-  /* TODO: Implement */
-}
+START_TEST(negative_zero_size) { /* TODO: Implement */ }
 END_TEST
 
 /* Check for the simple, non-uniform, 3x3 test image that the blur filter
@@ -218,21 +214,15 @@ END_TEST
  * previous values divided by 2, all of the previous values +- 1) */
 struct image blur_radius_img;
 int blur_radii[20];
-START_TEST(blur_radius_edge_cases) {
-  /* TODO: Implement */
-}
+START_TEST(blur_radius_edge_cases) { /* TODO: Implement */ }
 END_TEST
 
 /* Verify for a random image that the transparency filter works properly */
-START_TEST(transparency_functionality) {
-  /* TODO: Implement */
-}
+START_TEST(transparency_functionality) { /* TODO: Implement */ }
 END_TEST
 
 /* Check if the function crashes when we pass nullptr as the argument */
-START_TEST(transparency_edge_case) {
-  /* TODO: Implement */
-}
+START_TEST(transparency_edge_case) { /* TODO: Implement */ }
 END_TEST
 
 int main() {
@@ -252,7 +242,7 @@ int main() {
   srand(time(NULL) ^ getpid());
   blur_radius_img = generate_rand_img();
   int tmp[20] = {
-  /* TODO: Fill in required radii */
+      /* TODO: Fill in required radii */
   };
   memcpy(blur_radii, tmp, sizeof(blur_radii));
   tcase_add_loop_test(tc1, blur_radius_edge_cases, 0,
